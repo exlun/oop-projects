@@ -6,5 +6,5 @@ public interface ISegment
 
     public double CompletionTime { get; }
 
-    public FailureType? TryCompletion(Models.Train train);
+    public FailureType? TryComplete(Models.Train train);
 }

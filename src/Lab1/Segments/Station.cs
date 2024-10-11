@@ -8,7 +8,7 @@ public class Station(double load, double length, double maxSpeed) : ISegment
 
     public double MaxSpeed { get; init; } = maxSpeed;
 
-    public FailureType? TryCompletion(Models.Train train)
+    public FailureType? TryComplete(Models.Train train)
     {
         if (train.Speed > MaxSpeed)
         {

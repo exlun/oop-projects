@@ -8,7 +8,7 @@ public class PowerRails(double length, double power) : ISegment
 
     public double Power { get; init; } = power;
 
-    public FailureType? TryCompletion(Models.Train train)
+    public FailureType? TryComplete(Models.Train train)
     {
         double completedLength = 0;
         while (completedLength < Length)

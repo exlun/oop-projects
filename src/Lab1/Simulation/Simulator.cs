@@ -14,7 +14,7 @@ public class Simulator(Models.Train train, Route route)
         double pathTime = 0;
         foreach (ISegment segment in SimulationRoute.Path)
         {
-            FailureType? completionResult = segment.TryCompletion(SimulationTrain);
+            FailureType? completionResult = segment.TryComplete(SimulationTrain);
             if (completionResult != null)
             {
                 return new SimulationResult.FailResult(completionResult);

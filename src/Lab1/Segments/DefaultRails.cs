@@ -6,7 +6,7 @@ public class DefaultRails(double length) : ISegment
 
     public double CompletionTime { get; private set; }
 
-    public FailureType? TryCompletion(Models.Train train)
+    public FailureType? TryComplete(Models.Train train)
     {
         if (train.Speed < 0)
         {
