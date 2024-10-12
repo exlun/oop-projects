@@ -1,20 +1,20 @@
 ﻿namespace Itmo.ObjectOrientedProgramming.Lab1.Segments;
 
-public class SegmentResultType
+public abstract record SegmentResultType
 {
-    public class SegmentSuccess(double time) : SegmentResultType
+    public sealed record SegmentSuccess(double Time) : SegmentResultType
     {
-        public double CompletionTime { get; init; } = time;
+        public double CompletionTime => Time;
     }
 
-    public class SegmentFailure : SegmentResultType
+    public abstract record SegmentFailure : SegmentResultType
     {
-        public class ExceededSpeed : SegmentFailure;
+        public sealed record ExceededSpeed : SegmentFailure;
 
-        public class ExceededPower : SegmentFailure;
+        public sealed record ExceededPower : SegmentFailure;
 
-        public class WrongDirection : SegmentFailure;
+        public sealed record WrongDirection : SegmentFailure;
 
-        public class NotMoving : SegmentFailure;
+        public sealed record NotMoving : SegmentFailure;
     }
 }

@@ -20,28 +20,17 @@ public class PowerRails(double length, double power) : ISegment
             completedLength += train.Speed * train.Accuracy;
             completionTime += train.Accuracy;
 
-            SegmentResultType.SegmentFailure? speedFailureResult = CheckForSpeedFailures(train);
-            if (speedFailureResult is not null)
+            if (train.Speed < 0)
             {
-                return speedFailureResult;
+                return new SegmentResultType.SegmentFailure.WrongDirection();
+            }
+
+            if (train.Speed == 0)
+            {
+                return new SegmentResultType.SegmentFailure.NotMoving();
             }
         }
 
         return new SegmentResultType.SegmentSuccess(completionTime);
-    }
-
-    private SegmentResultType.SegmentFailure? CheckForSpeedFailures(Models.Train train)
-    {
-        if (train.Speed < 0)
-        {
-            return new SegmentResultType.SegmentFailure.WrongDirection();
-        }
-
-        if (train.Speed == 0)
-        {
-            return new SegmentResultType.SegmentFailure.NotMoving();
-        }
-
-        return null;
     }
 }

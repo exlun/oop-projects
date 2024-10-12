@@ -27,14 +27,9 @@ public class TrainSimulatorTests
         var route = new Route([powerRails, defaultRails], 10);
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
-        if (result is SimulationResult.FailResult failResult)
-        {
-            Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult.Result);
-        }
-        else
-        {
-            Assert.False(true);
-        }
+        Assert.IsType<SimulationResult.FailResult>(result);
+        var failResult = result as SimulationResult.FailResult;
+        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult);
     }
 
     [Fact]
@@ -46,14 +41,8 @@ public class TrainSimulatorTests
         var route = new Route([powerRails, defaultRails], 10);
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
-        if (result is SimulationResult.FailResult failResult)
-        {
-            Assert.IsType<SegmentResultType.SegmentFailure.ExceededPower>(failResult.Result);
-        }
-        else
-        {
-            Assert.False(true);
-        }
+        var failResult = result as SimulationResult.FailResult;
+        Assert.IsType<SegmentResultType.SegmentFailure.ExceededPower>(failResult);
     }
 
     [Fact]
@@ -79,14 +68,8 @@ public class TrainSimulatorTests
         var route = new Route([powerRails, station, defaultRails], 1000);
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
-        if (result is SimulationResult.FailResult failResult)
-        {
-            Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult.Result);
-        }
-        else
-        {
-            Assert.False(true);
-        }
+        var failResult = result as SimulationResult.FailResult;
+        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult);
     }
 
     [Fact]
@@ -99,14 +82,8 @@ public class TrainSimulatorTests
         var route = new Route([powerRails, defaultRails, station, defaultRails], 10);
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
-        if (result is SimulationResult.FailResult failResult)
-        {
-            Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult.Result);
-        }
-        else
-        {
-            Assert.False(true);
-        }
+        var failResult = result as SimulationResult.FailResult;
+        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult);
     }
 
     [Fact]
@@ -131,14 +108,8 @@ public class TrainSimulatorTests
         var route = new Route([defaultRails], 100);
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
-        if (result is SimulationResult.FailResult failResult)
-        {
-            Assert.IsType<SegmentResultType.SegmentFailure.NotMoving>(failResult.Result);
-        }
-        else
-        {
-            Assert.False(true);
-        }
+        var failResult = result as SimulationResult.FailResult;
+        Assert.IsType<SegmentResultType.SegmentFailure.NotMoving>(failResult);
     }
 
     [Fact]
@@ -150,13 +121,7 @@ public class TrainSimulatorTests
         var route = new Route([powerRailsAccelerating, powerRailsDecelerating], 100);
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
-        if (result is SimulationResult.FailResult failResult)
-        {
-            Assert.IsType<SegmentResultType.SegmentFailure.WrongDirection>(failResult.Result);
-        }
-        else
-        {
-            Assert.False(true);
-        }
+        var failResult = result as SimulationResult.FailResult;
+        Assert.IsType<SegmentResultType.SegmentFailure.WrongDirection>(failResult);
     }
 }
