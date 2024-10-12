@@ -42,7 +42,7 @@ public class TrainSimulatorTests
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
         var failResult = result as SimulationResult.FailResult;
-        Assert.IsType<SegmentResultType.SegmentFailure.ExceededPower>(failResult);
+        Assert.IsType<SegmentResultType.SegmentFailure.ExceededPower>(failResult?.Result);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class TrainSimulatorTests
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
         var failResult = result as SimulationResult.FailResult;
-        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult);
+        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult?.Result);
     }
 
     [Fact]
@@ -83,7 +83,7 @@ public class TrainSimulatorTests
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
         var failResult = result as SimulationResult.FailResult;
-        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult);
+        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult?.Result);
     }
 
     [Fact]
@@ -109,7 +109,7 @@ public class TrainSimulatorTests
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
         var failResult = result as SimulationResult.FailResult;
-        Assert.IsType<SegmentResultType.SegmentFailure.NotMoving>(failResult);
+        Assert.IsType<SegmentResultType.SegmentFailure.NotMoving>(failResult?.Result);
     }
 
     [Fact]
@@ -122,6 +122,6 @@ public class TrainSimulatorTests
         var simulator = new Simulator(train, route);
         SimulationResult result = simulator.TryCompletion();
         var failResult = result as SimulationResult.FailResult;
-        Assert.IsType<SegmentResultType.SegmentFailure.WrongDirection>(failResult);
+        Assert.IsType<SegmentResultType.SegmentFailure.WrongDirection>(failResult?.Result);
     }
 }
