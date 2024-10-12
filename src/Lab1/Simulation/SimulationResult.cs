@@ -2,15 +2,15 @@
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Simulation;
 
-public class SimulationResult
+public abstract record SimulationResult
 {
-    public class FailResult(FailureType failure) : SimulationResult
+    public sealed record FailResult(SegmentResultType SegmentResult) : SimulationResult
     {
-        public FailureType Result { get; init; } = failure;
+        public SegmentResultType Result => SegmentResult;
     }
 
-    public class SuccessResult(double time) : SimulationResult
+    public sealed record SuccessResult(double Time) : SimulationResult
     {
-        public double CompletionTime { get; init; } = time;
+        public double CompletionTime => Time;
     }
 }

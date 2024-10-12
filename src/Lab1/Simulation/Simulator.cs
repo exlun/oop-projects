@@ -14,13 +14,15 @@ public class Simulator(Models.Train train, Route route)
         double pathTime = 0;
         foreach (ISegment segment in SimulationRoute.Path)
         {
-            FailureType? completionResult = segment.TryComplete(SimulationTrain);
-            if (completionResult != null)
+            SegmentResultType completionResult = segment.TryComplete(SimulationTrain);
+            if (completionResult is SegmentResultType.SegmentSuccess result)
             {
-                return new SimulationResult.FailResult(completionResult);
+                pathTime += result.CompletionTime;
             }
-
-            pathTime += segment.CompletionTime;
+            else if (completionResult is SegmentResultType.SegmentFailure failure)
+            {
+                return new SimulationResult.FailResult(failure);
+            }
         }
 
         return new SimulationResult.SuccessResult(pathTime);

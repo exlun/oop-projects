@@ -29,7 +29,7 @@ public class TrainSimulatorTests
         SimulationResult result = simulator.TryCompletion();
         if (result is SimulationResult.FailResult failResult)
         {
-            Assert.IsType<FailureType.ExceededSpeed>(failResult.Result);
+            Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult.Result);
         }
         else
         {
@@ -48,7 +48,7 @@ public class TrainSimulatorTests
         SimulationResult result = simulator.TryCompletion();
         if (result is SimulationResult.FailResult failResult)
         {
-            Assert.IsType<FailureType.ExceededPower>(failResult.Result);
+            Assert.IsType<SegmentResultType.SegmentFailure.ExceededPower>(failResult.Result);
         }
         else
         {
@@ -81,7 +81,7 @@ public class TrainSimulatorTests
         SimulationResult result = simulator.TryCompletion();
         if (result is SimulationResult.FailResult failResult)
         {
-            Assert.IsType<FailureType.ExceededSpeed>(failResult.Result);
+            Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult.Result);
         }
         else
         {
@@ -101,7 +101,7 @@ public class TrainSimulatorTests
         SimulationResult result = simulator.TryCompletion();
         if (result is SimulationResult.FailResult failResult)
         {
-            Assert.IsType<FailureType.ExceededSpeed>(failResult.Result);
+            Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult.Result);
         }
         else
         {
@@ -133,7 +133,7 @@ public class TrainSimulatorTests
         SimulationResult result = simulator.TryCompletion();
         if (result is SimulationResult.FailResult failResult)
         {
-            Assert.IsType<FailureType.NotMoving>(failResult.Result);
+            Assert.IsType<SegmentResultType.SegmentFailure.NotMoving>(failResult.Result);
         }
         else
         {
@@ -152,7 +152,7 @@ public class TrainSimulatorTests
         SimulationResult result = simulator.TryCompletion();
         if (result is SimulationResult.FailResult failResult)
         {
-            Assert.IsType<FailureType.WrongDirection>(failResult.Result);
+            Assert.IsType<SegmentResultType.SegmentFailure.WrongDirection>(failResult.Result);
         }
         else
         {

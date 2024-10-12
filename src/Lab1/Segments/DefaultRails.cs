@@ -4,27 +4,26 @@ public class DefaultRails(double length) : ISegment
 {
     public double Length { get; init; } = length;
 
-    public double CompletionTime { get; private set; }
-
-    public FailureType? TryComplete(Models.Train train)
+    public SegmentResultType TryComplete(Models.Train train)
     {
         if (train.Speed < 0)
         {
-            return new FailureType.WrongDirection();
+            return new SegmentResultType.SegmentFailure.WrongDirection();
         }
 
         if (train.Speed == 0)
         {
-            return new FailureType.NotMoving();
+            return new SegmentResultType.SegmentFailure.NotMoving();
         }
 
+        double completionTime = 0;
         double completedLength = 0;
         while (completedLength < Length)
         {
             completedLength += train.Speed * train.Accuracy;
-            CompletionTime += train.Accuracy;
+            completionTime += train.Accuracy;
         }
 
-        return null;
+        return new SegmentResultType.SegmentSuccess(completionTime);
     }
 }
