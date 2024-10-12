@@ -29,7 +29,7 @@ public class TrainSimulatorTests
         SimulationResult result = simulator.TryCompletion();
         Assert.IsType<SimulationResult.FailResult>(result);
         var failResult = result as SimulationResult.FailResult;
-        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult);
+        Assert.IsType<SegmentResultType.SegmentFailure.ExceededSpeed>(failResult?.Result);
     }
 
     [Fact]
