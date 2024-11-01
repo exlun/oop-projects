@@ -225,6 +225,14 @@ public class AllCourseBuilderTests
 
                 Assert.Equal("new value", bl.Name.GetValue(testUser1.Id));
                 Assert.Equal("exsubj1", bl2.Name.GetValue(testUser1.Id));
+
+                labworksStorage[0].Name.SetValue(testUser1.Id, "new value");
+
+                Assert.Equal("new value", labworksStorage[0].Name.GetValue(testUser1.Id));
+                Assert.NotEqual("new value", bl.LabworksStorage[0].Name.GetValue(testUser1.Id));
+
+                bl.LabworksStorage[0].Name.SetValue(testUser1.Id, "new new value");
+                Assert.NotEqual("new new value", bl2.LabworksStorage[0].Name.GetValue(testUser1.Id));
             }
 
             [Fact]
@@ -364,6 +372,14 @@ public class AllCourseBuilderTests
 
                 Assert.Equal("new value", bl.Name.GetValue(testUser1.Id));
                 Assert.Equal("exsubj1", bl2.Name.GetValue(testUser1.Id));
+
+                labworksStorage[0].Name.SetValue(testUser1.Id, "new value");
+
+                Assert.Equal("new value", labworksStorage[0].Name.GetValue(testUser1.Id));
+                Assert.NotEqual("new value", bl.LabworksStorage[0].Name.GetValue(testUser1.Id));
+
+                bl.LabworksStorage[0].Name.SetValue(testUser1.Id, "new new value");
+                Assert.NotEqual("new new value", bl2.LabworksStorage[0].Name.GetValue(testUser1.Id));
             }
 
             [Fact]

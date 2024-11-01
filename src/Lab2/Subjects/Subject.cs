@@ -24,7 +24,7 @@ public abstract class Subject(
 
     public IdProtectedList<Lecture> LecturesStorage { get; init; } = new(authorId, []);
 
-    protected IReadOnlyList<Labwork> LabworksStorage { get; init; } = [.. labworks];
+    public IReadOnlyList<Labwork> LabworksStorage { get; init; } = labworks.Select(labwork => labwork.Clone()).ToList();
 
     public abstract Subject Clone();
 
