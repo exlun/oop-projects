@@ -1,5 +1,6 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab2.Repository;
 using Itmo.ObjectOrientedProgramming.Lab2.Subjects;
+using Itmo.ObjectOrientedProgramming.Lab2.ValueTypes;
 
 namespace Itmo.ObjectOrientedProgramming.Lab2.Courses;
 
@@ -9,7 +10,7 @@ public abstract class Course(string name, Guid head) : IIdentifiable
 
     public string Name { get; init; } = name;
 
-    public Dictionary<int, Subject> Subjects { get; init; } = [];   // <Semester, Subject> pair
+    public Dictionary<Semester, Subject> Subjects { get; init; } = [];   // <Semester, Subject> pair
 
     public Guid Head { get; init; } = head;
 
