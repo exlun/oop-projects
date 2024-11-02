@@ -10,7 +10,7 @@ public abstract class Course(string name, Guid head) : IIdentifiable
 
     public string Name { get; init; } = name;
 
-    public Dictionary<Semester, Subject> Subjects { get; init; } = [];   // <Semester, Subject> pair
+    public Dictionary<Semester, Subject> Subjects { get; init; } = [];
 
     public Guid Head { get; init; } = head;
 
