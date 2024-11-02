@@ -5,6 +5,7 @@ using Itmo.ObjectOrientedProgramming.Lab2.Repository;
 using Itmo.ObjectOrientedProgramming.Lab2.Subjects;
 using Itmo.ObjectOrientedProgramming.Lab2.Users;
 using Itmo.ObjectOrientedProgramming.Lab2.ValueTypes;
+using System.Collections.ObjectModel;
 using Xunit;
 
 namespace Lab2.Tests;
@@ -49,7 +50,7 @@ public class AllCourseBuilderTests
             Labwork basicLabwork2 = basicLabwork.Clone();
 
             Assert.Equal("lab1", basicLabwork2.Name.GetValue(testUser1.Id));
-            Assert.NotEqual(basicLabwork2.Id, basicLabwork2.Id);
+            Assert.NotEqual(basicLabwork.Id, basicLabwork2.Id);
             Assert.Equal(basicLabwork.Id, basicLabwork2.SourceLabworkId);
 
             basicLabwork.Name.SetValue(testUser1.Id, "new value");
@@ -64,26 +65,23 @@ public class AllCourseBuilderTests
             var labworkBuilder = new BasicLabworkBuilder();
 
             var testUser1 = new BasicUser("1");
-            var testUser2 = new BasicUser("2");
-
-            labworkBuilder.Author = testUser1.Id;
-            labworkBuilder.Description = "bububu";
-            labworkBuilder.Name = testUser1.Name + " lab";
+            const string description = "bububu";
+            const string labName = "lab1";
+            var points = new Points(50);
+            const string ratingCriteria = "aaa";
 
             var labworkBuilder2 = new BasicLabworkBuilder();
-            var points = new Points(50);
 
-            Labwork buildedLab1 = labworkBuilder.BuildLabwork();
-            Labwork buildedLab2 = labworkBuilder2.WithAuthor(testUser1.Id)
-                .WithDescription("bebebe")
-                .WithName(testUser2.Name + " lab")
+            Labwork buildedLab = labworkBuilder2.WithAuthor(testUser1.Id)
+                .WithDescription(description)
+                .WithName(labName)
                 .WithPoints(points)
-                .WithRatingCriteria("aaa")
+                .WithRatingCriteria(ratingCriteria)
                 .BuildLabwork();
 
-            Assert.Equal("bububu", buildedLab1.Description.GetValue(testUser1.Id));
-            Assert.Equal(testUser1.Name + " lab", buildedLab1.Name.GetValue(testUser1.Id));
-            Assert.Equal(testUser1.Id, buildedLab1.AuthorId);
+            Assert.Equal("bububu", buildedLab.Description.GetValue(testUser1.Id));
+            Assert.Equal(labName, buildedLab.Name.GetValue(testUser1.Id));
+            Assert.Equal(testUser1.Id, buildedLab.AuthorId);
         }
     }
 
@@ -142,12 +140,10 @@ public class AllCourseBuilderTests
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            lectureBuilder.AuthorId = testUser1.Id;
-            lectureBuilder.Name = testUser1.Name + " lec";
-            lectureBuilder.Description = "bububu";
-            lectureBuilder.Content = "content";
-
-            Lecture buildedLab = lectureBuilder.BuildLecture();
+            Lecture buildedLab = lectureBuilder.WithAuthorId(testUser1.Id)
+                .WithName(testUser1.Name + " lec")
+                .WithDescription("bububu")
+                .WithContent("content").BuildLecture();
 
             Assert.Equal("bububu", buildedLab.Description.GetValue(testUser1.Id));
             Assert.Equal(testUser1.Name + " lec", buildedLab.Name.GetValue(testUser1.Id));
@@ -164,20 +160,23 @@ public class AllCourseBuilderTests
             {
                 var subjectBuilder = new ExamSubjectBuilder();
 
-                subjectBuilder.ExamPoints = new Points(100);
+                var examPoints = new Points(100);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                subjectBuilder.AuthorId = testUser1.Id;
-
                 var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(77), "crt1", null);
                 var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(33), "crt2", null);
 
-                subjectBuilder.LabworksStorage.Add(basicLabwork);
-                subjectBuilder.LabworksStorage.Add(basicLabwork2);
+                var labworksCollection = new Collection<Labwork>();
+                labworksCollection.Add(basicLabwork);
+                labworksCollection.Add(basicLabwork2);
 
-                Assert.ThrowsAny<Exception>(() => subjectBuilder.BuildSubject());
+                Assert.ThrowsAny<Exception>(() => subjectBuilder.WithName("name")
+                    .WithAuthorId(testUser1.Id)
+                    .WithExamPoints(examPoints)
+                    .WithLabworksStorage(labworksCollection)
+                    .BuildSubject());
             }
 
             [Fact]
@@ -249,21 +248,21 @@ public class AllCourseBuilderTests
             {
                 var subjectBuilder = new ExamSubjectBuilder();
 
-                subjectBuilder.ExamPoints = new Points(20);
+                var examPoints = new Points(20);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                subjectBuilder.AuthorId = testUser1.Id;
-                subjectBuilder.Name = "name";
-
                 var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(60), "crt1", null);
                 var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(20), "crt2", null);
 
-                subjectBuilder.LabworksStorage.Add(basicLabwork);
-                subjectBuilder.LabworksStorage.Add(basicLabwork2);
+                var labworkStorage = new Collection<Labwork>();
+                labworkStorage.Add(basicLabwork);
+                labworkStorage.Add(basicLabwork2);
 
-                Subject newSubject = subjectBuilder.BuildSubject();
+                Subject newSubject = subjectBuilder.WithExamPoints(examPoints)
+                    .WithAuthorId(testUser1.Id)
+                    .WithName("name").WithLabworksStorage(labworkStorage).BuildSubject();
 
                 Assert.Equal(testUser1.Id, newSubject.AuthorId);
                 Assert.Equal("name", newSubject.Name.GetValue(testUser2.Id));
@@ -274,21 +273,22 @@ public class AllCourseBuilderTests
             {
                 var subjectBuilder = new ExamSubjectBuilder();
 
-                subjectBuilder.ExamPoints = new Points(20);
+                var examPoints = new Points(20);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                subjectBuilder.AuthorId = testUser1.Id;
-                subjectBuilder.Name = "name";
-
                 var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(60), "crt1", null);
                 var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(20), "crt2", null);
 
-                subjectBuilder.LabworksStorage.Add(basicLabwork);
-                subjectBuilder.LabworksStorage.Add(basicLabwork2);
+                var labworkStorage = new Collection<Labwork>();
+                labworkStorage.Add(basicLabwork);
+                labworkStorage.Add(basicLabwork2);
 
-                Subject newSubject = subjectBuilder.BuildSubject();
+                Subject newSubject = subjectBuilder.WithExamPoints(examPoints)
+                    .WithAuthorId(testUser1.Id)
+                    .WithLabworksStorage(labworkStorage)
+                    .WithName("name").BuildSubject();
 
                 Assert.Equal(testUser1.Id, newSubject.AuthorId);
                 Assert.Equal("name", newSubject.Name.GetValue(testUser2.Id));
@@ -311,20 +311,21 @@ public class AllCourseBuilderTests
             {
                 var subjectBuilder = new ZachotSubjectBuilder();
 
-                subjectBuilder.ZachotPoints = new Points(100);
+                var zachotPoints = new Points(100);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                subjectBuilder.AuthorId = testUser1.Id;
-
                 var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(77), "crt1", null);
                 var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(33), "crt2", null);
 
-                subjectBuilder.LabworksStorage.Add(basicLabwork);
-                subjectBuilder.LabworksStorage.Add(basicLabwork2);
+                var labworkStorage = new Collection<Labwork>();
+                labworkStorage.Add(basicLabwork);
+                labworkStorage.Add(basicLabwork2);
 
-                Assert.ThrowsAny<Exception>(() => subjectBuilder.BuildSubject());
+                Assert.ThrowsAny<Exception>(() => subjectBuilder.WithZachotPoints(zachotPoints)
+                    .WithLabworksStorage(labworkStorage)
+                    .WithAuthorId(testUser1.Id).BuildSubject());
             }
 
             [Fact]
@@ -396,21 +397,22 @@ public class AllCourseBuilderTests
             {
                 var subjectBuilder = new ZachotSubjectBuilder();
 
-                subjectBuilder.ZachotPoints = new Points(60);
+                var zachotPoints = new Points(60);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                subjectBuilder.AuthorId = testUser1.Id;
-                subjectBuilder.Name = "name";
-
                 var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(70), "crt1", null);
                 var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(30), "crt2", null);
 
-                subjectBuilder.LabworksStorage.Add(basicLabwork);
-                subjectBuilder.LabworksStorage.Add(basicLabwork2);
+                var labworkStorage = new Collection<Labwork>();
+                labworkStorage.Add(basicLabwork);
+                labworkStorage.Add(basicLabwork2);
 
-                Subject newSubject = subjectBuilder.BuildSubject();
+                Subject newSubject = subjectBuilder.WithZachotPoints(zachotPoints)
+                    .WithAuthorId(testUser1.Id)
+                    .WithName("name")
+                    .WithLabworksStorage(labworkStorage).BuildSubject();
 
                 Assert.Equal(testUser1.Id, newSubject.AuthorId);
                 Assert.Equal("name", newSubject.Name.GetValue(testUser2.Id));
@@ -421,21 +423,21 @@ public class AllCourseBuilderTests
             {
                 var zachotSubjectBuilder = new ZachotSubjectBuilder();
 
-                zachotSubjectBuilder.ZachotPoints = new Points(60);
+                var zachotPoints = new Points(60);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                zachotSubjectBuilder.AuthorId = testUser1.Id;
-                zachotSubjectBuilder.Name = "name";
-
                 var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(70), "crt1", null);
                 var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(30), "crt2", null);
 
-                zachotSubjectBuilder.LabworksStorage.Add(basicLabwork);
-                zachotSubjectBuilder.LabworksStorage.Add(basicLabwork2);
+                var labworkStorage = new Collection<Labwork>();
+                labworkStorage.Add(basicLabwork);
+                labworkStorage.Add(basicLabwork2);
 
-                Subject newSubject = zachotSubjectBuilder.BuildSubject();
+                Subject newSubject = zachotSubjectBuilder.WithZachotPoints(zachotPoints)
+                    .WithAuthorId(testUser1.Id)
+                    .WithName("name").WithLabworksStorage(labworkStorage).BuildSubject();
 
                 Assert.Equal(testUser1.Id, newSubject.AuthorId);
                 Assert.Equal("name", newSubject.Name.GetValue(testUser2.Id));

@@ -6,7 +6,6 @@ public class BasicLecture(
     string description,
     string content,
     Guid? sourceId) :
-
     Lecture(authorId,
         name,
         description,
@@ -16,11 +15,11 @@ public class BasicLecture(
     public override Lecture Clone()
     {
         var clone = new BasicLecture(
-                                     AuthorId,
-                                     new string(Name.GetValue(AuthorId)),
-                                     new string(Description.GetValue(AuthorId)),
-                                     new string(Content.GetValue(AuthorId)),
-                                     Id);
+            AuthorId,
+            new string(Name.GetValue(AuthorId)),
+            new string(Description.GetValue(AuthorId)),
+            new string(Content.GetValue(AuthorId)),
+            Id);
 
         return clone;
     }

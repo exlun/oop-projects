@@ -1,24 +1,46 @@
 ﻿namespace Itmo.ObjectOrientedProgramming.Lab2.Lectures;
 
-public class BasicLectureBuilder : ILectureBuilder
+public class BasicLectureBuilder
 {
-    public string Name { get; set; } = string.Empty;
+    private string Name { get; set; } = string.Empty;
 
-    public string Description { get; set; } = string.Empty;
+    private string Description { get; set; } = string.Empty;
 
-    public string Content { get; set; } = string.Empty;
+    private string Content { get; set; } = string.Empty;
 
-    public Guid AuthorId { get; set; }
+    private Guid AuthorId { get; set; }
 
-    public Guid? SourceId { get; set; }
+    public BasicLectureBuilder WithName(string name)
+    {
+        Name = name;
+        return this;
+    }
+
+    public BasicLectureBuilder WithDescription(string description)
+    {
+        Description = description;
+        return this;
+    }
+
+    public BasicLectureBuilder WithContent(string content)
+    {
+        Content = content;
+        return this;
+    }
+
+    public BasicLectureBuilder WithAuthorId(Guid authorId)
+    {
+        AuthorId = authorId;
+        return this;
+    }
 
     public Lecture BuildLecture()
     {
         return new BasicLecture(
-                                AuthorId,
-                                new string(Name),
-                                new string(Description),
-                                new string(Content),
-                                null);
+            AuthorId,
+            new string(Name),
+            new string(Description),
+            new string(Content),
+            null);
     }
 }
