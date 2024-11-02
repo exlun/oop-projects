@@ -19,11 +19,11 @@ public class AllCourseBuilderTests
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            var bl = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(100), "rc1", null);
+            var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(100), "rc1", null);
 
-            bl.RatingCriteria.SetValue(testUser1.Id, "new value");
+            basicLabwork.RatingCriteria.SetValue(testUser1.Id, "new value");
 
-            Assert.Equal("new value", bl.RatingCriteria.GetValue(testUser1.Id));
+            Assert.Equal("new value", basicLabwork.RatingCriteria.GetValue(testUser1.Id));
         }
 
         [Fact]
@@ -32,10 +32,10 @@ public class AllCourseBuilderTests
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            var bl = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(100), "rc1", null);
+            var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(100), "rc1", null);
 
-            Assert.ThrowsAny<Exception>(() => bl.RatingCriteria.SetValue(testUser2.Id, "smth evil"));
-            Assert.Equal("rc1", bl.RatingCriteria.GetValue(testUser2.Id));
+            Assert.ThrowsAny<Exception>(() => basicLabwork.RatingCriteria.SetValue(testUser2.Id, "smth evil"));
+            Assert.Equal("rc1", basicLabwork.RatingCriteria.GetValue(testUser2.Id));
         }
 
         [Fact]
@@ -44,37 +44,46 @@ public class AllCourseBuilderTests
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            var bl = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(100), "rc1", null);
+            var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(100), "rc1", null);
 
-            Labwork bl2 = bl.Clone();
+            Labwork basicLabwork2 = basicLabwork.Clone();
 
-            Assert.Equal("lab1", bl2.Name.GetValue(testUser1.Id));
-            Assert.NotEqual(bl.Id, bl2.Id);
-            Assert.Equal(bl.Id, bl2.SourceLabworkId);
+            Assert.Equal("lab1", basicLabwork2.Name.GetValue(testUser1.Id));
+            Assert.NotEqual(basicLabwork2.Id, basicLabwork2.Id);
+            Assert.Equal(basicLabwork.Id, basicLabwork2.SourceLabworkId);
 
-            bl.Name.SetValue(testUser1.Id, "new value");
+            basicLabwork.Name.SetValue(testUser1.Id, "new value");
 
-            Assert.Equal("new value", bl.Name.GetValue(testUser1.Id));
-            Assert.Equal("lab1", bl2.Name.GetValue(testUser1.Id));
+            Assert.Equal("new value", basicLabwork.Name.GetValue(testUser1.Id));
+            Assert.Equal("lab1", basicLabwork2.Name.GetValue(testUser1.Id));
         }
 
         [Fact]
         public void Labwork_BuilderTest_BuildsSuccessfully()
         {
-            var lb = new BasicLabworkBuilder();
+            var labworkBuilder = new BasicLabworkBuilder();
 
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            lb.Author = testUser1.Id;
-            lb.Description = "bububu";
-            lb.Name = testUser1.Name + " lab";
+            labworkBuilder.Author = testUser1.Id;
+            labworkBuilder.Description = "bububu";
+            labworkBuilder.Name = testUser1.Name + " lab";
 
-            Labwork buildedLab = lb.BuildLabwork();
+            var labworkBuilder2 = new BasicLabworkBuilder();
+            var points = new Points(50);
 
-            Assert.Equal("bububu", buildedLab.Description.GetValue(testUser1.Id));
-            Assert.Equal(testUser1.Name + " lab", buildedLab.Name.GetValue(testUser1.Id));
-            Assert.Equal(testUser1.Id, buildedLab.AuthorId);
+            Labwork buildedLab1 = labworkBuilder.BuildLabwork();
+            Labwork buildedLab2 = labworkBuilder2.WithAuthor(testUser1.Id)
+                .WithDescription("bebebe")
+                .WithName(testUser2.Name + " lab")
+                .WithPoints(points)
+                .WithRatingCriteria("aaa")
+                .BuildLabwork();
+
+            Assert.Equal("bububu", buildedLab1.Description.GetValue(testUser1.Id));
+            Assert.Equal(testUser1.Name + " lab", buildedLab1.Name.GetValue(testUser1.Id));
+            Assert.Equal(testUser1.Id, buildedLab1.AuthorId);
         }
     }
 
@@ -86,11 +95,11 @@ public class AllCourseBuilderTests
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            var bl = new BasicLecture(testUser1.Id, "lec1", "desc1", "content1", null);
+            var basicLecture = new BasicLecture(testUser1.Id, "lec1", "desc1", "content1", null);
 
-            bl.Content.SetValue(testUser1.Id, "new value");
+            basicLecture.Content.SetValue(testUser1.Id, "new value");
 
-            Assert.Equal("new value", bl.Content.GetValue(testUser1.Id));
+            Assert.Equal("new value", basicLecture.Content.GetValue(testUser1.Id));
         }
 
         [Fact]
@@ -99,10 +108,10 @@ public class AllCourseBuilderTests
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            var bl = new BasicLecture(testUser1.Id, "lec1", "desc1", "content1", null);
+            var basicLecture = new BasicLecture(testUser1.Id, "lec1", "desc1", "content1", null);
 
-            Assert.ThrowsAny<Exception>(() => bl.Content.SetValue(testUser2.Id, "smth evil"));
-            Assert.Equal("content1", bl.Content.GetValue(testUser2.Id));
+            Assert.ThrowsAny<Exception>(() => basicLecture.Content.SetValue(testUser2.Id, "smth evil"));
+            Assert.Equal("content1", basicLecture.Content.GetValue(testUser2.Id));
         }
 
         [Fact]
@@ -111,34 +120,34 @@ public class AllCourseBuilderTests
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            var bl = new BasicLecture(testUser1.Id, "lec1", "desc1", "content1", null);
+            var basicLecture = new BasicLecture(testUser1.Id, "lec1", "desc1", "content1", null);
 
-            Lecture bl2 = bl.Clone();
+            Lecture basicLecture2 = basicLecture.Clone();
 
-            Assert.Equal("lec1", bl2.Name.GetValue(testUser1.Id));
-            Assert.NotEqual(bl.Id, bl2.Id);
-            Assert.Equal(bl.Id, bl2.SourceId);
+            Assert.Equal("lec1", basicLecture2.Name.GetValue(testUser1.Id));
+            Assert.NotEqual(basicLecture.Id, basicLecture2.Id);
+            Assert.Equal(basicLecture.Id, basicLecture2.SourceId);
 
-            bl.Name.SetValue(testUser1.Id, "new value");
+            basicLecture.Name.SetValue(testUser1.Id, "new value");
 
-            Assert.Equal("new value", bl.Name.GetValue(testUser1.Id));
-            Assert.Equal("lec1", bl2.Name.GetValue(testUser1.Id));
+            Assert.Equal("new value", basicLecture.Name.GetValue(testUser1.Id));
+            Assert.Equal("lec1", basicLecture2.Name.GetValue(testUser1.Id));
         }
 
         [Fact]
         public void Lecture_BuilderTest_BuildsSuccessfully()
         {
-            var lb = new BasicLectureBuilder();
+            var lectureBuilder = new BasicLectureBuilder();
 
             var testUser1 = new BasicUser("1");
             var testUser2 = new BasicUser("2");
 
-            lb.AuthorId = testUser1.Id;
-            lb.Name = testUser1.Name + " lec";
-            lb.Description = "bububu";
-            lb.Content = "content";
+            lectureBuilder.AuthorId = testUser1.Id;
+            lectureBuilder.Name = testUser1.Name + " lec";
+            lectureBuilder.Description = "bububu";
+            lectureBuilder.Content = "content";
 
-            Lecture buildedLab = lb.BuildLecture();
+            Lecture buildedLab = lectureBuilder.BuildLecture();
 
             Assert.Equal("bububu", buildedLab.Description.GetValue(testUser1.Id));
             Assert.Equal(testUser1.Name + " lec", buildedLab.Name.GetValue(testUser1.Id));
@@ -153,22 +162,22 @@ public class AllCourseBuilderTests
             [Fact]
             public void ExamSubject_InvalidPointsTest_ThrowsException()
             {
-                var sb = new ExamSubjectBuilder();
+                var subjectBuilder = new ExamSubjectBuilder();
 
-                sb.ExamPoints = new Points(100);
+                subjectBuilder.ExamPoints = new Points(100);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                sb.AuthorId = testUser1.Id;
+                subjectBuilder.AuthorId = testUser1.Id;
 
-                var l1 = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(77), "crt1", null);
-                var l2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(33), "crt2", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(77), "crt1", null);
+                var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(33), "crt2", null);
 
-                sb.LabworksStorage.Add(l1);
-                sb.LabworksStorage.Add(l2);
+                subjectBuilder.LabworksStorage.Add(basicLabwork);
+                subjectBuilder.LabworksStorage.Add(basicLabwork2);
 
-                Assert.ThrowsAny<Exception>(() => sb.BuildSubject());
+                Assert.ThrowsAny<Exception>(() => subjectBuilder.BuildSubject());
             }
 
             [Fact]
@@ -177,14 +186,14 @@ public class AllCourseBuilderTests
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                var lab1 = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
                 var labworksStorage = new List<Labwork>();
-                labworksStorage.Add(lab1);
-                var bl = new ExamSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
+                labworksStorage.Add(basicLabwork);
+                var examSubject = new ExamSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
 
-                bl.Name.SetValue(testUser1.Id, "new value");
+                examSubject.Name.SetValue(testUser1.Id, "new value");
 
-                Assert.Equal("new value", bl.Name.GetValue(testUser1.Id));
+                Assert.Equal("new value", examSubject.Name.GetValue(testUser1.Id));
             }
 
             [Fact]
@@ -193,13 +202,13 @@ public class AllCourseBuilderTests
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                var lab1 = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
                 var labworksStorage = new List<Labwork>();
-                labworksStorage.Add(lab1);
-                var bl = new ExamSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
+                labworksStorage.Add(basicLabwork);
+                var examSubject = new ExamSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
 
-                Assert.ThrowsAny<Exception>(() => bl.Name.SetValue(testUser2.Id, "smth evil"));
-                Assert.Equal("exsubj1", bl.Name.GetValue(testUser2.Id));
+                Assert.ThrowsAny<Exception>(() => examSubject.Name.SetValue(testUser2.Id, "smth evil"));
+                Assert.Equal("exsubj1", examSubject.Name.GetValue(testUser2.Id));
             }
 
             [Fact]
@@ -208,90 +217,90 @@ public class AllCourseBuilderTests
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                var lab1 = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
                 var labworksStorage = new List<Labwork>();
-                labworksStorage.Add(lab1);
-                var bl = new ExamSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
+                labworksStorage.Add(basicLabwork);
+                var examSubject = new ExamSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
 
-                var bl2 = bl.Clone() as ExamSubject;
-                Assert.NotNull(bl2);
-                Assert.IsType<ExamSubject>(bl2);
+                var examSubject2 = examSubject.Clone() as ExamSubject;
+                Assert.NotNull(examSubject2);
+                Assert.IsType<ExamSubject>(examSubject2);
 
-                Assert.Equal("exsubj1", bl2.Name.GetValue(testUser1.Id));
-                Assert.NotEqual(bl.Id, bl2.Id);
-                Assert.Equal(bl.Id, bl2.SourceId);
+                Assert.Equal("exsubj1", examSubject2.Name.GetValue(testUser1.Id));
+                Assert.NotEqual(examSubject.Id, examSubject2.Id);
+                Assert.Equal(examSubject.Id, examSubject2.SourceId);
 
-                bl.Name.SetValue(testUser1.Id, "new value");
+                examSubject.Name.SetValue(testUser1.Id, "new value");
 
-                Assert.Equal("new value", bl.Name.GetValue(testUser1.Id));
-                Assert.Equal("exsubj1", bl2.Name.GetValue(testUser1.Id));
+                Assert.Equal("new value", examSubject.Name.GetValue(testUser1.Id));
+                Assert.Equal("exsubj1", examSubject2.Name.GetValue(testUser1.Id));
 
                 labworksStorage[0].Name.SetValue(testUser1.Id, "new value");
 
                 Assert.Equal("new value", labworksStorage[0].Name.GetValue(testUser1.Id));
-                Assert.NotEqual("new value", bl.LabworksStorage[0].Name.GetValue(testUser1.Id));
+                Assert.NotEqual("new value", examSubject.LabworksStorage[0].Name.GetValue(testUser1.Id));
 
-                bl.LabworksStorage[0].Name.SetValue(testUser1.Id, "new new value");
-                Assert.NotEqual("new new value", bl2.LabworksStorage[0].Name.GetValue(testUser1.Id));
+                examSubject.LabworksStorage[0].Name.SetValue(testUser1.Id, "new new value");
+                Assert.NotEqual("new new value", examSubject2.LabworksStorage[0].Name.GetValue(testUser1.Id));
             }
 
             [Fact]
             public void ExamSubject_BuildTest_BuildsSuccessfully()
             {
-                var sb = new ExamSubjectBuilder();
+                var subjectBuilder = new ExamSubjectBuilder();
 
-                sb.ExamPoints = new Points(20);
+                subjectBuilder.ExamPoints = new Points(20);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                sb.AuthorId = testUser1.Id;
-                sb.Name = "name";
+                subjectBuilder.AuthorId = testUser1.Id;
+                subjectBuilder.Name = "name";
 
-                var l1 = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(60), "crt1", null);
-                var l2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(20), "crt2", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(60), "crt1", null);
+                var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(20), "crt2", null);
 
-                sb.LabworksStorage.Add(l1);
-                sb.LabworksStorage.Add(l2);
+                subjectBuilder.LabworksStorage.Add(basicLabwork);
+                subjectBuilder.LabworksStorage.Add(basicLabwork2);
 
-                Subject ns = sb.BuildSubject();
+                Subject newSubject = subjectBuilder.BuildSubject();
 
-                Assert.Equal(testUser1.Id, ns.AuthorId);
-                Assert.Equal("name", ns.Name.GetValue(testUser2.Id));
+                Assert.Equal(testUser1.Id, newSubject.AuthorId);
+                Assert.Equal("name", newSubject.Name.GetValue(testUser2.Id));
             }
 
             [Fact]
             public void ExamSubject_BuildCloneTest_ClonesSuccessfully()
             {
-                var sb = new ExamSubjectBuilder();
+                var subjectBuilder = new ExamSubjectBuilder();
 
-                sb.ExamPoints = new Points(20);
+                subjectBuilder.ExamPoints = new Points(20);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                sb.AuthorId = testUser1.Id;
-                sb.Name = "name";
+                subjectBuilder.AuthorId = testUser1.Id;
+                subjectBuilder.Name = "name";
 
-                var l1 = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(60), "crt1", null);
-                var l2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(20), "crt2", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(60), "crt1", null);
+                var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(20), "crt2", null);
 
-                sb.LabworksStorage.Add(l1);
-                sb.LabworksStorage.Add(l2);
+                subjectBuilder.LabworksStorage.Add(basicLabwork);
+                subjectBuilder.LabworksStorage.Add(basicLabwork2);
 
-                Subject ns = sb.BuildSubject();
+                Subject newSubject = subjectBuilder.BuildSubject();
 
-                Assert.Equal(testUser1.Id, ns.AuthorId);
-                Assert.Equal("name", ns.Name.GetValue(testUser2.Id));
+                Assert.Equal(testUser1.Id, newSubject.AuthorId);
+                Assert.Equal("name", newSubject.Name.GetValue(testUser2.Id));
 
-                Subject ns2 = ns.Clone();
+                Subject newSubject2 = newSubject.Clone();
 
-                Assert.Equal(ns.Id, ns2.SourceId);
-                Assert.Equal(ns.Name.GetValue(testUser1.Id), ns2.Name.GetValue(testUser2.Id));
+                Assert.Equal(newSubject.Id, newSubject2.SourceId);
+                Assert.Equal(newSubject.Name.GetValue(testUser1.Id), newSubject2.Name.GetValue(testUser2.Id));
 
-                ns.Name.SetValue(testUser1.Id, "new name");
+                newSubject.Name.SetValue(testUser1.Id, "new name");
 
-                Assert.NotEqual(ns.Name.GetValue(testUser1.Id), ns2.Name.GetValue(testUser2.Id));
+                Assert.NotEqual(newSubject.Name.GetValue(testUser1.Id), newSubject2.Name.GetValue(testUser2.Id));
             }
         }
 
@@ -300,22 +309,22 @@ public class AllCourseBuilderTests
             [Fact]
             public void ZachotSubject_InvalidPointsTest_ThrowsException()
             {
-                var sb = new ZachotSubjectBuilder();
+                var subjectBuilder = new ZachotSubjectBuilder();
 
-                sb.ZachotPoints = new Points(100);
+                subjectBuilder.ZachotPoints = new Points(100);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                sb.AuthorId = testUser1.Id;
+                subjectBuilder.AuthorId = testUser1.Id;
 
-                var l1 = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(77), "crt1", null);
-                var l2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(33), "crt2", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(77), "crt1", null);
+                var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(33), "crt2", null);
 
-                sb.LabworksStorage.Add(l1);
-                sb.LabworksStorage.Add(l2);
+                subjectBuilder.LabworksStorage.Add(basicLabwork);
+                subjectBuilder.LabworksStorage.Add(basicLabwork2);
 
-                Assert.ThrowsAny<Exception>(() => sb.BuildSubject());
+                Assert.ThrowsAny<Exception>(() => subjectBuilder.BuildSubject());
             }
 
             [Fact]
@@ -324,14 +333,14 @@ public class AllCourseBuilderTests
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                var lab1 = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
                 var labworksStorage = new List<Labwork>();
-                labworksStorage.Add(lab1);
-                var bl = new ZachotSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
+                labworksStorage.Add(basicLabwork);
+                var zachotSubject = new ZachotSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
 
-                bl.Name.SetValue(testUser1.Id, "new value");
+                zachotSubject.Name.SetValue(testUser1.Id, "new value");
 
-                Assert.Equal("new value", bl.Name.GetValue(testUser1.Id));
+                Assert.Equal("new value", zachotSubject.Name.GetValue(testUser1.Id));
             }
 
             [Fact]
@@ -340,13 +349,13 @@ public class AllCourseBuilderTests
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                var lab1 = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
                 var labworksStorage = new List<Labwork>();
-                labworksStorage.Add(lab1);
-                var bl = new ZachotSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
+                labworksStorage.Add(basicLabwork);
+                var zachotSubject = new ZachotSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
 
-                Assert.ThrowsAny<Exception>(() => bl.Name.SetValue(testUser2.Id, "smth evil"));
-                Assert.Equal("exsubj1", bl.Name.GetValue(testUser2.Id));
+                Assert.ThrowsAny<Exception>(() => zachotSubject.Name.SetValue(testUser2.Id, "smth evil"));
+                Assert.Equal("exsubj1", zachotSubject.Name.GetValue(testUser2.Id));
             }
 
             [Fact]
@@ -355,90 +364,90 @@ public class AllCourseBuilderTests
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                var lab1 = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "lab1", "desc1", new Points(77), "crt1", null);
                 var labworksStorage = new List<Labwork>();
-                labworksStorage.Add(lab1);
-                var bl = new ZachotSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
+                labworksStorage.Add(basicLabwork);
+                var zachotSubject = new ZachotSubject(testUser1.Id, "exsubj1", new Points(20), labworksStorage, null);
 
-                var bl2 = bl.Clone() as ZachotSubject;
-                Assert.NotNull(bl2);
-                Assert.IsType<ZachotSubject>(bl2);
+                var zachotSubject2 = zachotSubject.Clone() as ZachotSubject;
+                Assert.NotNull(zachotSubject2);
+                Assert.IsType<ZachotSubject>(zachotSubject2);
 
-                Assert.Equal("exsubj1", bl2.Name.GetValue(testUser1.Id));
-                Assert.NotEqual(bl.Id, bl2.Id);
-                Assert.Equal(bl.Id, bl2.SourceId);
+                Assert.Equal("exsubj1", zachotSubject2.Name.GetValue(testUser1.Id));
+                Assert.NotEqual(zachotSubject.Id, zachotSubject2.Id);
+                Assert.Equal(zachotSubject.Id, zachotSubject2.SourceId);
 
-                bl.Name.SetValue(testUser1.Id, "new value");
+                zachotSubject.Name.SetValue(testUser1.Id, "new value");
 
-                Assert.Equal("new value", bl.Name.GetValue(testUser1.Id));
-                Assert.Equal("exsubj1", bl2.Name.GetValue(testUser1.Id));
+                Assert.Equal("new value", zachotSubject.Name.GetValue(testUser1.Id));
+                Assert.Equal("exsubj1", zachotSubject2.Name.GetValue(testUser1.Id));
 
                 labworksStorage[0].Name.SetValue(testUser1.Id, "new value");
 
                 Assert.Equal("new value", labworksStorage[0].Name.GetValue(testUser1.Id));
-                Assert.NotEqual("new value", bl.LabworksStorage[0].Name.GetValue(testUser1.Id));
+                Assert.NotEqual("new value", zachotSubject.LabworksStorage[0].Name.GetValue(testUser1.Id));
 
-                bl.LabworksStorage[0].Name.SetValue(testUser1.Id, "new new value");
-                Assert.NotEqual("new new value", bl2.LabworksStorage[0].Name.GetValue(testUser1.Id));
+                zachotSubject.LabworksStorage[0].Name.SetValue(testUser1.Id, "new new value");
+                Assert.NotEqual("new new value", zachotSubject2.LabworksStorage[0].Name.GetValue(testUser1.Id));
             }
 
             [Fact]
             public void ZachotSubject_BuildTest_BuildsSuccessfully()
             {
-                var sb = new ZachotSubjectBuilder();
+                var subjectBuilder = new ZachotSubjectBuilder();
 
-                sb.ZachotPoints = new Points(60);
+                subjectBuilder.ZachotPoints = new Points(60);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                sb.AuthorId = testUser1.Id;
-                sb.Name = "name";
+                subjectBuilder.AuthorId = testUser1.Id;
+                subjectBuilder.Name = "name";
 
-                var l1 = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(70), "crt1", null);
-                var l2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(30), "crt2", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(70), "crt1", null);
+                var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(30), "crt2", null);
 
-                sb.LabworksStorage.Add(l1);
-                sb.LabworksStorage.Add(l2);
+                subjectBuilder.LabworksStorage.Add(basicLabwork);
+                subjectBuilder.LabworksStorage.Add(basicLabwork2);
 
-                Subject ns = sb.BuildSubject();
+                Subject newSubject = subjectBuilder.BuildSubject();
 
-                Assert.Equal(testUser1.Id, ns.AuthorId);
-                Assert.Equal("name", ns.Name.GetValue(testUser2.Id));
+                Assert.Equal(testUser1.Id, newSubject.AuthorId);
+                Assert.Equal("name", newSubject.Name.GetValue(testUser2.Id));
             }
 
             [Fact]
             public void ZachotSubject_BuildCloneTest_ClonesSuccessfully()
             {
-                var sb = new ZachotSubjectBuilder();
+                var zachotSubjectBuilder = new ZachotSubjectBuilder();
 
-                sb.ZachotPoints = new Points(60);
+                zachotSubjectBuilder.ZachotPoints = new Points(60);
 
                 var testUser1 = new BasicUser("1");
                 var testUser2 = new BasicUser("2");
 
-                sb.AuthorId = testUser1.Id;
-                sb.Name = "name";
+                zachotSubjectBuilder.AuthorId = testUser1.Id;
+                zachotSubjectBuilder.Name = "name";
 
-                var l1 = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(70), "crt1", null);
-                var l2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(30), "crt2", null);
+                var basicLabwork = new BasicLabwork(testUser1.Id, "name1", "desc1", new Points(70), "crt1", null);
+                var basicLabwork2 = new BasicLabwork(testUser1.Id, "name2", "desc2", new Points(30), "crt2", null);
 
-                sb.LabworksStorage.Add(l1);
-                sb.LabworksStorage.Add(l2);
+                zachotSubjectBuilder.LabworksStorage.Add(basicLabwork);
+                zachotSubjectBuilder.LabworksStorage.Add(basicLabwork2);
 
-                Subject ns = sb.BuildSubject();
+                Subject newSubject = zachotSubjectBuilder.BuildSubject();
 
-                Assert.Equal(testUser1.Id, ns.AuthorId);
-                Assert.Equal("name", ns.Name.GetValue(testUser2.Id));
+                Assert.Equal(testUser1.Id, newSubject.AuthorId);
+                Assert.Equal("name", newSubject.Name.GetValue(testUser2.Id));
 
-                Subject ns2 = ns.Clone();
+                Subject newSubject2 = newSubject.Clone();
 
-                Assert.Equal(ns.Id, ns2.SourceId);
-                Assert.Equal(ns.Name.GetValue(testUser1.Id), ns2.Name.GetValue(testUser2.Id));
+                Assert.Equal(newSubject.Id, newSubject2.SourceId);
+                Assert.Equal(newSubject.Name.GetValue(testUser1.Id), newSubject2.Name.GetValue(testUser2.Id));
 
-                ns.Name.SetValue(testUser1.Id, "new name");
+                newSubject.Name.SetValue(testUser1.Id, "new name");
 
-                Assert.NotEqual(ns.Name.GetValue(testUser1.Id), ns2.Name.GetValue(testUser2.Id));
+                Assert.NotEqual(newSubject.Name.GetValue(testUser1.Id), newSubject2.Name.GetValue(testUser2.Id));
             }
         }
     }
@@ -448,167 +457,167 @@ public class AllCourseBuilderTests
         [Fact]
         public void UserRepository_AllFunctionsTest_AddsFindsRemovesCorrespondingly()
         {
-            var userrepo = new BasicRepository<User>();
+            var userRepository = new BasicRepository<User>();
 
             var user1 = new BasicUser("1");
             var user2 = new BasicUser("2");
             var user3 = new BasicUser("3");
 
-            userrepo.Add(user1);
+            userRepository.Add(user1);
 
-            Assert.Equal(user1, userrepo.Get(user1.Id));
+            Assert.Equal(user1, userRepository.Get(user1.Id));
 
-            userrepo.Add(user2);
-            userrepo.Add(user3);
+            userRepository.Add(user2);
+            userRepository.Add(user3);
 
-            Assert.Equal(user1, userrepo.Get(user1.Id));
-            Assert.Equal(user2, userrepo.Get(user2.Id));
-            Assert.Equal(user3, userrepo.Get(user3.Id));
+            Assert.Equal(user1, userRepository.Get(user1.Id));
+            Assert.Equal(user2, userRepository.Get(user2.Id));
+            Assert.Equal(user3, userRepository.Get(user3.Id));
 
-            Assert.Null(userrepo.Get(Guid.NewGuid()));
+            Assert.Null(userRepository.Get(Guid.NewGuid()));
 
-            Assert.True(userrepo.Remove(user2.Id));
+            Assert.True(userRepository.Remove(user2.Id));
 
-            Assert.Equal(user1, userrepo.Get(user1.Id));
-            Assert.Null(userrepo.Get(user2.Id));
-            Assert.Equal(user3, userrepo.Get(user3.Id));
+            Assert.Equal(user1, userRepository.Get(user1.Id));
+            Assert.Null(userRepository.Get(user2.Id));
+            Assert.Equal(user3, userRepository.Get(user3.Id));
         }
 
         [Fact]
         public void SubjectRepository_AllFunctionsTest_AddsFindsRemovesCorrespondingly()
         {
-            var subjrepo = new BasicRepository<Subject>();
+            var subjectRepository = new BasicRepository<Subject>();
 
             var user1 = new BasicUser("1");
             var user2 = new BasicUser("2");
             var user3 = new BasicUser("3");
 
-            var lab1 = new BasicLabwork(user1.Id, "lab1", "desc1", new Points(100), "crt1", null);
+            var basicLabwork = new BasicLabwork(user1.Id, "lab1", "desc1", new Points(100), "crt1", null);
 
             var labworksStorage = new List<Labwork>();
-            labworksStorage.Add(lab1);
+            labworksStorage.Add(basicLabwork);
 
-            var subj1 = new ZachotSubject(user1.Id, "zasubj1", new Points(100), labworksStorage, null);
-            var subj2 = new ExamSubject(user2.Id, "exsubj1", new Points(100), labworksStorage, null);
-            var subj3 = new ExamSubject(user3.Id, "exsubj1", new Points(100), labworksStorage, null);
+            var subject1 = new ZachotSubject(user1.Id, "zasubj1", new Points(100), labworksStorage, null);
+            var subject2 = new ExamSubject(user2.Id, "exsubj1", new Points(100), labworksStorage, null);
+            var subject3 = new ExamSubject(user3.Id, "exsubj1", new Points(100), labworksStorage, null);
 
-            subjrepo.Add(subj1);
+            subjectRepository.Add(subject1);
 
-            Assert.Equal(subj1, subjrepo.Get(subj1.Id));
+            Assert.Equal(subject1, subjectRepository.Get(subject1.Id));
 
-            subjrepo.Add(subj2);
-            subjrepo.Add(subj3);
+            subjectRepository.Add(subject2);
+            subjectRepository.Add(subject3);
 
-            Assert.Equal(subj1, subjrepo.Get(subj1.Id));
-            Assert.Equal(subj2, subjrepo.Get(subj2.Id));
-            Assert.Equal(subj3, subjrepo.Get(subj3.Id));
+            Assert.Equal(subject1, subjectRepository.Get(subject1.Id));
+            Assert.Equal(subject2, subjectRepository.Get(subject2.Id));
+            Assert.Equal(subject3, subjectRepository.Get(subject3.Id));
 
-            Assert.Null(subjrepo.Get(Guid.NewGuid()));
+            Assert.Null(subjectRepository.Get(Guid.NewGuid()));
 
-            Assert.True(subjrepo.Remove(subj2.Id));
+            Assert.True(subjectRepository.Remove(subject2.Id));
 
-            Assert.Equal(subj1, subjrepo.Get(subj1.Id));
-            Assert.Null(subjrepo.Get(subj2.Id));
-            Assert.Equal(subj3, subjrepo.Get(subj3.Id));
+            Assert.Equal(subject1, subjectRepository.Get(subject1.Id));
+            Assert.Null(subjectRepository.Get(subject2.Id));
+            Assert.Equal(subject3, subjectRepository.Get(subject3.Id));
         }
 
         [Fact]
         public void LecturesRepository_AllFunctionsTest_AddsFindsRemovesCorrespondingly()
         {
-            var lecrepo = new BasicRepository<Lecture>();
+            var lectureRepository = new BasicRepository<Lecture>();
 
             var user1 = new BasicUser("1");
             var user2 = new BasicUser("2");
             var user3 = new BasicUser("3");
 
-            var bl = new BasicLecture(user1.Id, "lec1", "desc1", "content1", null);
-            var bl2 = new BasicLecture(user2.Id, "lec1", "desc1", "content1", null);
-            var bl3 = new BasicLecture(user3.Id, "lec1", "desc1", "content1", null);
+            var basicLecture = new BasicLecture(user1.Id, "lec1", "desc1", "content1", null);
+            var basicLecture2 = new BasicLecture(user2.Id, "lec1", "desc1", "content1", null);
+            var basicLecture3 = new BasicLecture(user3.Id, "lec1", "desc1", "content1", null);
 
-            lecrepo.Add(bl);
+            lectureRepository.Add(basicLecture);
 
-            Assert.Equal(bl, lecrepo.Get(bl.Id));
+            Assert.Equal(basicLecture, lectureRepository.Get(basicLecture.Id));
 
-            lecrepo.Add(bl2);
-            lecrepo.Add(bl3);
+            lectureRepository.Add(basicLecture2);
+            lectureRepository.Add(basicLecture3);
 
-            Assert.Equal(bl, lecrepo.Get(bl.Id));
-            Assert.Equal(bl2, lecrepo.Get(bl2.Id));
-            Assert.Equal(bl3, lecrepo.Get(bl3.Id));
+            Assert.Equal(basicLecture, lectureRepository.Get(basicLecture.Id));
+            Assert.Equal(basicLecture2, lectureRepository.Get(basicLecture2.Id));
+            Assert.Equal(basicLecture3, lectureRepository.Get(basicLecture3.Id));
 
-            Assert.Null(lecrepo.Get(Guid.NewGuid()));
+            Assert.Null(lectureRepository.Get(Guid.NewGuid()));
 
-            Assert.True(lecrepo.Remove(bl2.Id));
+            Assert.True(lectureRepository.Remove(basicLecture2.Id));
 
-            Assert.Equal(bl, lecrepo.Get(bl.Id));
-            Assert.Null(lecrepo.Get(bl2.Id));
-            Assert.Equal(bl3, lecrepo.Get(bl3.Id));
+            Assert.Equal(basicLecture, lectureRepository.Get(basicLecture.Id));
+            Assert.Null(lectureRepository.Get(basicLecture2.Id));
+            Assert.Equal(basicLecture3, lectureRepository.Get(basicLecture3.Id));
         }
 
         [Fact]
         public void LabworkRepository_AllFunctionsTest_AddsFindsRemovesCorrespondingly()
         {
-            var labrepo = new BasicRepository<Labwork>();
+            var labworkRepository = new BasicRepository<Labwork>();
 
             var user1 = new BasicUser("1");
             var user2 = new BasicUser("2");
             var user3 = new BasicUser("3");
 
-            var bl = new BasicLabwork(user1.Id, "lec1", "desc1", new Points(10), "content1", null);
-            var bl2 = new BasicLabwork(user1.Id, "lec1", "desc1", new Points(10), "content1", null);
-            var bl3 = new BasicLabwork(user1.Id, "lec1", "desc1", new Points(10), "content1", null);
+            var basicLabwork = new BasicLabwork(user1.Id, "lec1", "desc1", new Points(10), "content1", null);
+            var basicLabwork2 = new BasicLabwork(user1.Id, "lec1", "desc1", new Points(10), "content1", null);
+            var basicLabwork3 = new BasicLabwork(user1.Id, "lec1", "desc1", new Points(10), "content1", null);
 
-            labrepo.Add(bl);
+            labworkRepository.Add(basicLabwork);
 
-            Assert.Equal(bl, labrepo.Get(bl.Id));
+            Assert.Equal(basicLabwork, labworkRepository.Get(basicLabwork.Id));
 
-            labrepo.Add(bl2);
-            labrepo.Add(bl3);
+            labworkRepository.Add(basicLabwork2);
+            labworkRepository.Add(basicLabwork3);
 
-            Assert.Equal(bl, labrepo.Get(bl.Id));
-            Assert.Equal(bl2, labrepo.Get(bl2.Id));
-            Assert.Equal(bl3, labrepo.Get(bl3.Id));
+            Assert.Equal(basicLabwork, labworkRepository.Get(basicLabwork.Id));
+            Assert.Equal(basicLabwork2, labworkRepository.Get(basicLabwork2.Id));
+            Assert.Equal(basicLabwork3, labworkRepository.Get(basicLabwork3.Id));
 
-            Assert.Null(labrepo.Get(Guid.NewGuid()));
+            Assert.Null(labworkRepository.Get(Guid.NewGuid()));
 
-            Assert.True(labrepo.Remove(bl2.Id));
+            Assert.True(labworkRepository.Remove(basicLabwork2.Id));
 
-            Assert.Equal(bl, labrepo.Get(bl.Id));
-            Assert.Null(labrepo.Get(bl2.Id));
-            Assert.Equal(bl3, labrepo.Get(bl3.Id));
+            Assert.Equal(basicLabwork, labworkRepository.Get(basicLabwork.Id));
+            Assert.Null(labworkRepository.Get(basicLabwork2.Id));
+            Assert.Equal(basicLabwork3, labworkRepository.Get(basicLabwork3.Id));
         }
 
         [Fact]
         public void CourseRepository_AllFunctionsTest_AddsFindsRemovesCorrespondingly()
         {
-            var courserepo = new BasicRepository<Course>();
+            var courseRepository = new BasicRepository<Course>();
 
             var user1 = new BasicUser("1");
             var user2 = new BasicUser("2");
             var user3 = new BasicUser("3");
 
-            var bc = new BasicCourse("course1", user1.Id);
-            var bc2 = new BasicCourse("course2", user2.Id);
-            var bc3 = new BasicCourse("course3", user3.Id);
+            var basicCourse = new BasicCourse("course1", user1.Id);
+            var basicCourse2 = new BasicCourse("course2", user2.Id);
+            var basicCourse3 = new BasicCourse("course3", user3.Id);
 
-            courserepo.Add(bc);
+            courseRepository.Add(basicCourse);
 
-            Assert.Equal(bc, courserepo.Get(bc.Id));
+            Assert.Equal(basicCourse, courseRepository.Get(basicCourse.Id));
 
-            courserepo.Add(bc2);
-            courserepo.Add(bc3);
+            courseRepository.Add(basicCourse2);
+            courseRepository.Add(basicCourse3);
 
-            Assert.Equal(bc, courserepo.Get(bc.Id));
-            Assert.Equal(bc2, courserepo.Get(bc2.Id));
-            Assert.Equal(bc3, courserepo.Get(bc3.Id));
+            Assert.Equal(basicCourse, courseRepository.Get(basicCourse.Id));
+            Assert.Equal(basicCourse2, courseRepository.Get(basicCourse2.Id));
+            Assert.Equal(basicCourse3, courseRepository.Get(basicCourse3.Id));
 
-            Assert.Null(courserepo.Get(Guid.NewGuid()));
+            Assert.Null(courseRepository.Get(Guid.NewGuid()));
 
-            Assert.True(courserepo.Remove(bc2.Id));
+            Assert.True(courseRepository.Remove(basicCourse2.Id));
 
-            Assert.Equal(bc, courserepo.Get(bc.Id));
-            Assert.Null(courserepo.Get(bc2.Id));
-            Assert.Equal(bc3, courserepo.Get(bc3.Id));
+            Assert.Equal(basicCourse, courseRepository.Get(basicCourse.Id));
+            Assert.Null(courseRepository.Get(basicCourse2.Id));
+            Assert.Equal(basicCourse3, courseRepository.Get(basicCourse3.Id));
         }
     }
 }
