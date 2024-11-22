@@ -8,7 +8,7 @@ public interface IDisplay
 
     void DisplayMessage();
 
-    void SetMessage(string message);
+    bool SetMessage(string message);
 
     void SetColor(Color color);
 }

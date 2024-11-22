@@ -55,7 +55,7 @@ public class MessageSystemTests
     }
 
     [Fact]
-    public void MessageFilterProxy_ReceivingMessageBelowImportanceLevel_ThrowsException()
+    public void MessageFilterProxy_ReceivingMessageBelowImportanceLevel_IsNotRecieved()
     {
         var recipientMock = new Mock<IRecipient>();
         int importanceLevel = 5;

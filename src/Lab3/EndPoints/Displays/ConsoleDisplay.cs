@@ -21,16 +21,11 @@ public class ConsoleDisplay(IConsole console) : IDisplay
         _console.WriteLine(Crayon.Output.Rgb(_currentColor.R, _currentColor.G, _currentColor.B).Text($"ON DISPLAY: {_message}"));
     }
 
-    public void SetMessage(string message)
+    public bool SetMessage(string message)
     {
-        if (_message.Length == 0)
-        {
-            _message = message;
-        }
-        else
-        {
-            throw new InvalidOperationException("Display is already in use");
-        }
+        if (_message.Length != 0) return false;
+        _message = message;
+        return true;
     }
 
     public void SetColor(Color color)
