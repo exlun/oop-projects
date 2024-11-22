@@ -8,13 +8,14 @@ public class MessageState(Message message, bool isRead = false)
 
     public bool IsRead { get; private set; } = isRead;
 
-    public void MarkAsRead()
+    public bool MarkAsRead()
     {
         if (IsRead)
         {
-            throw new InvalidOperationException("Message is already read");
+            return false;
         }
 
         IsRead = true;
+        return true;
     }
 }

@@ -19,7 +19,12 @@ public class MessageSystemTests
         var user = new User("TestUser");
         user.ReceiveMessage(message);
 
-        Assert.False(user.CheckMessageStatus(message));
+        MessageCheckResult messageStatus = user.CheckMessageStatus(message);
+        Assert.IsType<MessageCheckResult.MessageFound>(messageStatus);
+
+        var messageResult = messageStatus as MessageCheckResult.MessageFound;
+        Assert.NotNull(messageResult);
+        Assert.False(messageResult.IsRead);
     }
 
     [Fact]
@@ -30,18 +35,23 @@ public class MessageSystemTests
         user.ReceiveMessage(message);
         user.ReadMessage(message);
 
-        Assert.True(user.CheckMessageStatus(message));
+        MessageCheckResult messageStatus = user.CheckMessageStatus(message);
+        Assert.IsType<MessageCheckResult.MessageFound>(messageStatus);
+
+        var messageResult = messageStatus as MessageCheckResult.MessageFound;
+        Assert.NotNull(messageResult);
+        Assert.True(messageResult.IsRead);
     }
 
     [Fact]
-    public void User_ReadingMessageTwiceTest_ThrowsException()
+    public void User_ReadingMessageTwiceTest_ReturnsFalse()
     {
         var message = new Message("Header", "Body", 1);
         var user = new User("TestUser");
         user.ReceiveMessage(message);
         user.ReadMessage(message);
 
-        Assert.Throws<InvalidOperationException>(() => user.ReadMessage(message));
+        Assert.False(user.ReadMessage(message));
     }
 
     [Fact]

@@ -2,9 +2,9 @@
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.EndPoints.Displays;
 
-public class FileDisplayDriver(FileDisplay display) : IDisplayDriver
+public class BasicDisplayDriver(IDisplay display) : IDisplayDriver
 {
-    private readonly FileDisplay _display = display;
+    private readonly IDisplay _display = display;
 
     public void ClearDisplay()
     {

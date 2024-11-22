@@ -1,6 +1,5 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab3.Messages;
 using Itmo.ObjectOrientedProgramming.Lab3.Utils;
-using System.Reflection;
 
 namespace Itmo.ObjectOrientedProgramming.Lab3.EndPoints.Users;
 
@@ -10,46 +9,33 @@ public class User(string name) : IIdentifiable
 
     public Guid Id { get; } = Guid.NewGuid();
 
+    private List<MessageState> Messages { get; set; } = [];
+
     public bool Equals(IIdentifiable? other)
     {
         return other != null && other.Id == Id;
     }
-
-    private List<MessageState> Messages { get; set; } = [];
 
     public void ReceiveMessage(Message message)
     {
         Messages.Add(new MessageState(message));
     }
 
-    public void ReadMessage(Message message)
+    public bool ReadMessage(Message message)
     {
-        if (Messages == null)
-        {
-            throw new TargetException("Message not found");
-        }
+        MessageState? messageState = Messages.Find(messageState => messageState.Message.Id == message.Id);
 
-        foreach (MessageState messageState in Messages.Where(messageState => messageState.Message.Id == message.Id))
-        {
-            messageState.MarkAsRead();
-            return;
-        }
-
-        throw new TargetException("Message not found");
+        return messageState != null && messageState.MarkAsRead();
     }
 
-    public bool CheckMessageStatus(Message message)
+    public MessageCheckResult CheckMessageStatus(Message message)
     {
-        if (Messages == null)
+        MessageState? messageState = Messages.Find(messageState => messageState.Message.Id == message.Id);
+        if (messageState == null)
         {
-            throw new TargetException("Message not found");
+            return new MessageCheckResult.MessageNotFound();
         }
 
-        foreach (MessageState messageState in Messages.Where(messageState => messageState.Message.Id == message.Id))
-        {
-            return messageState.IsRead;
-        }
-
-        throw new TargetException("Message not found");
+        return new MessageCheckResult.MessageFound(messageState);
     }
 }

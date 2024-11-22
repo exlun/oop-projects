@@ -5,14 +5,14 @@ namespace Itmo.ObjectOrientedProgramming.Lab3.Recipients.Builders;
 
 public class RecipientBuilder : IRecipientBuilderInitializer, IRecipientBuilderConfigured
 {
+    private IRecipient? Recipient { get; set; }
+
     private RecipientBuilder() { }
 
     public static IRecipientBuilderInitializer GetBuilder()
     {
         return new RecipientBuilder();
     }
-
-    private IRecipient? Recipient { get; set; }
 
     public IRecipientBuilderConfigured WithRecipient(IRecipient recipient)
     {
