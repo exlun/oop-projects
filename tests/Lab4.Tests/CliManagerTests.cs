@@ -39,7 +39,7 @@ public static class CliManagerTests
         string expectedContent = "File content";
         File.WriteAllText(tempFilePath, expectedContent);
 
-        var fileUri = new Uri($"file:///{tempFilePath.Replace(Path.DirectorySeparatorChar, '/')}");
+        var fileUri = new Uri($"{tempFilePath.Replace(Path.DirectorySeparatorChar, '/')}");
 
         string[] parts = ["file", "show", fileUri.ToString(), "-m", "console"];
         CliManager.Filesystem = new LocalFilesystem();
@@ -199,8 +199,8 @@ public static class CliManagerTests
         File.WriteAllText(filePath, "Test content");
         File.WriteAllText(subDirFilePath, "Subdir test content");
 
-        var tempDirUri = new Uri($"file:///{tempDirPath.Replace(Path.DirectorySeparatorChar, '/')}");
-        var subDirUri = new Uri($"file:///{subDirPath.Replace(Path.DirectorySeparatorChar, '/')}");
+        var tempDirUri = new Uri($"{tempDirPath.Replace(Path.DirectorySeparatorChar, '/')}");
+        var subDirUri = new Uri($"{subDirPath.Replace(Path.DirectorySeparatorChar, '/')}");
 
         string[] parts = ["tree", "list", "-d", "0"];
         CliManager.Filesystem = new LocalFilesystem();
