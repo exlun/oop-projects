@@ -27,11 +27,7 @@ public static class CliManager
                 switch (command)
                 {
                     case "connect":
-                        if (IsConnected())
-                        {
-                            HandleConnectCommand(commandParts);
-                        }
-
+                        HandleConnectCommand(commandParts);
                         break;
                     case "disconnect":
                         if (IsConnected())
@@ -208,7 +204,8 @@ public static class CliManager
     {
         if (parts.Length < 2)
         {
-            Console.WriteLine("Usage: file show [Path] {-m Mode} | file move [SourcePath] [DestinationPath] | file copy [SourcePath] [DestinationPath] | file delete [Path] | file rename [Path] [Name]");
+            Console.WriteLine(
+                "Usage: file show [Path] {-m Mode} | file move [SourcePath] [DestinationPath] | file copy [SourcePath] [DestinationPath] | file delete [Path] | file rename [Path] [Name]");
             return;
         }
 
