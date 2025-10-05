@@ -8,22 +8,8 @@
     <ItemGroup>
         <PackageReference Include="coverlet.collector"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-        <PackageReference Include="Moq" />
-        <PackageReference Include="Npgsql" />
         <PackageReference Include="xunit"/>
         <PackageReference Include="xunit.runner.visualstudio"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\Lab5\Application\DTOs\DTOs.csproj" />
-      <ProjectReference Include="..\..\src\Lab5\Application\ApplicationExtensions\ApplicationExtensions.csproj" />
-      <ProjectReference Include="..\..\src\Lab5\Application\ApplicationInterfaces\ApplicationInterfaces.csproj" />
-      <ProjectReference Include="..\..\src\Lab5\Application\Services\Services.csproj" />
-      <ProjectReference Include="..\..\src\Lab5\Application\UseCases\UseCases.csproj" />
-      <ProjectReference Include="..\..\src\Lab5\Domain\Interfaces\Interfaces.csproj" />
-      <ProjectReference Include="..\..\src\Lab5\Infrastructure\Extensions\Extensions.csproj" />
-      <ProjectReference Include="..\..\src\Lab5\Infrastructure\Migrations\Migrations.csproj" />
-      <ProjectReference Include="..\..\src\Lab5\Infrastructure\Repositories\Repositories.csproj" />
     </ItemGroup>
 
 </Project>
